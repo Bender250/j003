@@ -1,0 +1,72 @@
+\documentclass[a4paper]{article}
+\usepackage[english, czech]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amssymb}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+
+\usepackage{amsthm}
+\usepackage{color}
+\usepackage{microtype}
+\usepackage{url}
+\usepackage{enumerate}
+\title{J003 -- Fundamental Concepts of Computer Science and Some Surprising Discoveries: 1. sada}
+\author{Karel Kubíček}
+\date{\today}
+\begin{document}
+\maketitle
+
+\section*{Úloha 1.}
+V~intervalu $I = [2^{i},2^{i+1}-1]$ se nachází $2^{i}$ různých čísel. Pokud by všechna čísla v~tomto intervalu byla náhodná, pak by podle definice kolmogorovské složitosti musela být programem zapsatelná kratší posloupností bitů, než je reprezentuje ve dvojkové soustavě.
+
+Chtěli bychom tedy program, který všechna čísla v~zadaném intervalu kóduje na slova délky maximálně $\lceil \log_{2}(2^{i} + 1)\rceil - 1 = i$. Slov délky maximálně $i$ je $2^{i}-1$. Předpokládejme, že program odpovídá injektivnímu zobrazení z~$I$ do množiny kódů maximálně délky $i$. Mohutnost první množiny je $2^{i}$, druhé $2^{i}-1$, proto takové zobrazení neexistuje. To je spor s~předpokladem o~existenci programu, který by mohl kódovat zadaná čísla na kratší. Tedy v~zadaném intervalu existuje alespoň jedno číslo, které je náhodné.
+
+
+\section*{Úloha 2.}
+Pro určení kolmogorovské složitosti musíme zvolit program, který k~zadané hodnotě $n$ určí slovo $w_{n}$. Program je závislý pouze na hodnotě $n$, která do něj musí být zakódována (binárně, délka je tedy $\lceil \log_{2}(n + 1)\rceil$).{}
+
+Délka $|w_{n}| = 2^{n^{2}}$. Pokud z~toho vyjádříme $n$, získáváme $n = \sqrt{\log_{2} |w_{n}|}$. Zadané $n$ do programu kódujeme binárně, složitost programu vzhledem k~$|w_{n}|$ získáme dosažením $n$ do rovnice předchozího odstavce.
+
+$$K(w_{n}) \leq \left\lceil \log_{2} \left(\sqrt{\log_{2} |w_{n}|} + 1\right)\right\rceil.$$
+
+
+\section*{Úloha 3.}
+K~rekurzivnímu jazyku existuje program, který v~konečném čase skončí. Tento program rozhoduje, zdali slovo do jazyka přísluší. Program budeme používat jako podproceduru našeho programu, který generuje postupně všechna slova délky $k$ (kterých je konečně mnoho). Pro každé vygenerované slovo pomocí podprocedury ověří, zdali slovo do jazyka patří. Tento program v~konečném čase najde slovo $w_{k}$ a kolmogorovská složitost je závislá jen na $k$, které můžeme kódovat binárně. Výsledná horní hranice kolmogorovské složitosti je tedy $\lceil \log_{2}(k + 1)\rceil$.
+
+
+\section*{Úloha 7.}
+Mějme program, který iterativně generuje čísla a testuje, zdali jsou prvočíslem. Při tom si počítá počet prvočísel. Takový program pak podle zadané hranice $k$, kdy má zastavit nalezne $k$-té prvočíslo. Kolmogorovská složitost tohoto programu $p$ je $K(p) = \lceil \log_{2}(k + 1)\rceil$.
+
+Kolmogorovská složitost $k$-tého prvočísla lze tedy pomocí zadaného programu ohraničit shora:
+$$K(Prim(k)) \leq \lceil \log_{2}(k + 1)\rceil.$${}
+
+Déle použijme Prime number theorem. Ten nám říká, jaká je hustota prvočísel vzhledem v~limitě do nekonečna ($\pi(n)$ je počet prvočísel v~intervalu od 1 po číslo $n$):
+
+$$\lim_{n \to \infty} \frac{\pi(n)} {n / \ln n} = 1$$
+
+Z~toho můžeme vyjádřit v~limitě, čemu je rovno zadané prvočíslo ($\mathit{Prim}(k)$ vyjadřuje $k$-té prvočíslo):
+
+$$\lim_{k \to \infty} \frac{Prim(k)} {k \cdot \ln k} = 1$$
+
+Pomožme si asymptotickou notací, která popisuje funkci vzhledem k~asymptotě v~nekonečnu. Pak $Prim(k) = \Theta(k \cdot \ln k)$.
+
+Aby bylo zadané číslo náhodné, pak musí mít větší nebo rovnu kolmogorovskou složitost délce svého zápisu. Vyjádřeme složitost pomocí tvrzení z~Prime number theorem a získáváme:
+
+$$K(Prim(k)) = \Theta(\lceil \log_{2}(n \cdot \ln n + 1)\rceil)$$
+
+Náš program však dokáže $k$-té prvočíslo generovat s~kolmogorovskou složitostí $K(Prim(k)) \leq \lceil \log_{2}(k + 1)\rceil.$, což je pro dostatečně velká čísla menší hodnota, než program, který přímo do programu zakóduje dané prvočíslo. Výsledkem je, že existuje pouze konečně mnoho náhodných prvočísel.
+
+
+\section*{Úloha 8.}
+
+\begin{enumerate}[(a)]
+    \item Důkaz provedeme sporem. Předpokládejme, že jazyk $L_{kol}$ je rozhodnutelný. Potom existuje program, který rozhoduje, zdali zadané slovo patří do $L_{kol}$. Program bychom spuštěli postupně s~rostoucími hodnotami $x \in \mathbb{N}$. Dokud by program vracel $\mathit{false}$, tak by platila nerovnost z~podmínky jazyka $K(w) \leq  Number(x)$. V~momentě, kdy vrátí $\mathit{true}$ víme, že kolmogorovská složitost byla právě hodnota, pro kterou vrátil program poprvé $\mathit{true}$. Tím jsme získali program, který určuje kolmogorovskou složitost zadaného slova. To je ale ve sporu s~větou  $5.64$ z~Theoretical Computer Science (J. Hromkovič).
+    \item Zadaný jazyk je rekurzivně spočetný. Program pro slovo $w$ generuje programy v~kanonickém pořadí, které na zadané slovo pouští pomocí dovetailingu. Pokud existuje program, který k~zadanému $w$ kolmogorovskou složitost určí, pak se nachází v~našem seřazeném seznamu programů a jeho výpočet skončí.
+\end{enumerate}
+\end{document}
+
+
+
+
+
